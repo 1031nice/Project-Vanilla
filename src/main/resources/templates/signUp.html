@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="#" th:action="@{/signUp}" th:method="post" th:object="${user}">
+<!--    <p th:if="${#fields.hasErrors{'name')}" th:errors="*{name}">Incorrect date</p>-->
+<!--    <p th:if="${#fields.hasErrors{'id')}" th:errors="*{id}">Incorrect date</p>-->
+<!--    <p th:if="${#fields.hasErrors{'pw')}" th:errors="*{pw}">Incorrect date</p>-->
+    name: <input type="text" title="name" th:field="*{name}"/><br>
+    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">incorrect name</p>
+    id: <input type="text" title="id" th:field="*{id}"/><br>
+    <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}">incorrect name</p>
+    password: <input type="password" title="pw" th:field="*{pw}"><br>
+    <p th:if="${#fields.hasErrors('pw')}" th:errors="*{pw}">incorrect name</p>
+    <input type="submit" value="SignUp">
+</form>
+</body>
+</html>

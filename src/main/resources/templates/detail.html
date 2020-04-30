@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${doc.title}"/>
+</head>
+<body>
+제목: <span th:text="${doc.title}"/><br><br>
+저자: <span th:text="${session.user.name}"/><br><br>
+조회수: <span th:text="${doc.hit+1}"/><br><br>
+내용: <span th:text="${doc.content}"/><br><br>
+<a th:href="@{/show}">list</a><br><br>
+<form th:action="@{/delete/{docId}(docId=${doc.id})}">
+	<input type="submit" value="Delete"><br><br>
+</form>
+<form th:action="edit" method="post">
+	<input type="hidden" name="docId" value="${doc.id}">
+	<input type="hidden" name="title" value="${doc.title}">
+	<input type="hidden" name="content" value="${doc.content}">
+	<input type="submit" value="Edit">
+</form>
+</body>
+</html>
