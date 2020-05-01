@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.SessionFlashMapManager;
 import javax.servlet.http.HttpSession;
@@ -40,7 +41,6 @@ public class SampleController {
         if(result.hasErrors()) // 적절한 에러메시지 출력되는 원리는?
             return VIEWS_USER_CREATE_FORM;
         else {
-//            UserDAO userDAO = new UserDAO();
             userDAO.signUp(user);
             return "redirect:/";
         }
@@ -55,7 +55,6 @@ public class SampleController {
     @PostMapping(value = "/login", produces = "text/html;")
     public String login(HttpSession session, @RequestParam String id, @RequestParam String pw){
         User user = new User(id, pw);
-//        UserDAO userDAO = new UserDAO();
         user = userDAO.login(user);
         if(user != null) {
             session.setAttribute("user", user);
@@ -67,7 +66,6 @@ public class SampleController {
 
     @GetMapping("/show")
     public String show(Model model){
-//        DocDAO docDAO = new DocDAO();
         List<Doc> docList = new ArrayList<>();
         docDAO.getAll(docList);
         model.addAttribute(docList);
@@ -76,7 +74,6 @@ public class SampleController {
 
     @GetMapping("/read/{docId}")
     public String read(Model model, @PathVariable Integer docId){
-//        DocDAO docDAO = new DocDAO();
         Doc doc = docDAO.get(docId);
         model.addAttribute(doc);
         return "detail.html";
@@ -90,7 +87,6 @@ public class SampleController {
 
     @PostMapping("/write")
     public String writeSubmit(@ModelAttribute Doc doc) {
-//        DocDAO docDAO = new DocDAO();
         docDAO.add(doc);
         return "redirect:/show";
     }
@@ -98,6 +94,27 @@ public class SampleController {
     @GetMapping("/delete/{docId}")
     public String delete(@PathVariable Integer docId){
         docDAO.delete(docId);
+        return "redirect:/show";
+    }
+
+    @GetMapping("/edit")
+    // 올때는 다 string인가보다. doc id가 long타입이라고 해도 html에서 벨류로 전달할 때는
+    public ModelAndView edit(@RequestParam String docId, @RequestParam String title, @RequestParam String content){
+        Doc doc = new Doc();
+        doc.setId(Long.parseLong(docId));
+        doc.setTitle(title);
+        doc.setContent(content);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("doc", doc);
+        modelAndView.setViewName("edit.html");
+        return modelAndView;
+    }
+
+    @PostMapping("/edit")
+    public String edit2(@ModelAttribute Doc doc, @RequestParam String docId){
+        System.out.println(doc.getId());
+        doc.setId(Long.parseLong(docId)); // 왜 docId는 ModelAttribute로 처리가 안될까
+        docDAO.update(doc);
         return "redirect:/show";
     }
 }

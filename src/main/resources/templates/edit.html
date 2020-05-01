@@ -5,10 +5,10 @@
 <title>edit</title>
 </head>
 <body>
-<form action="#" th:object="${user}" th:method="@{/edit}">
-	<input type="hidden" name="docId" value="${doc.id}"></input>
-	<input type="text" name="title" autofocus="autofocus" th:text="#{user.title}"></input><br>
-	<textarea name="content" wrap="soft">${doc.content}</textarea><br>
+<form th:action="@{/edit}" method="post">
+	<input th:type="hidden" name="docId" th:value="${doc.id}"/>
+	<input th:type="text" name="title" autofocus="autofocus" th:value="${doc.title}"/><br>
+	<textarea name="content" wrap="soft" th:text="${doc.content}"></textarea><br>
 	<input type="submit" value="Submit">
 </form>
 </body>

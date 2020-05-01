@@ -128,6 +128,7 @@ public class DocDAO {
             String sql = "update document set title='"+doc.getTitle()+"', "
                     + "content='"+doc.getContent()+"', ts=CURRENT_TIMESTAMP"
                     + " where doc_id = " + doc.getId();
+            System.out.println(sql);
             stmt.executeUpdate(sql); //SQL문을 전달하여 실행
             stmt.close();
             conn.close();
