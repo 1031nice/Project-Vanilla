@@ -99,11 +99,7 @@ public class SampleController {
 
     @GetMapping("/edit")
     // 올때는 다 string인가보다. doc id가 long타입이라고 해도 html에서 벨류로 전달할 때는
-    public ModelAndView edit(@RequestParam String docId, @RequestParam String title, @RequestParam String content){
-        Doc doc = new Doc();
-        doc.setId(Long.parseLong(docId));
-        doc.setTitle(title);
-        doc.setContent(content);
+    public ModelAndView edit(@ModelAttribute Doc doc){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("doc", doc);
         modelAndView.setViewName("edit.html");
@@ -111,9 +107,14 @@ public class SampleController {
     }
 
     @PostMapping("/edit")
-    public String edit2(@ModelAttribute Doc doc, @RequestParam String docId){
+    public String edit2(@ModelAttribute Doc doc){
+        /*
+         왜 docId는 ModelAttribute로 처리가 안될까
+         A. Doc의 변수 이름은 docId가 아니라 id인데
+         view에서 값을 전달할 때 name은 docId여서 인식을 못한거지
+         view에서 name을 docId가 아니라 그냥 id로 수정하였음.
+         */
         System.out.println(doc.getId());
-        doc.setId(Long.parseLong(docId)); // 왜 docId는 ModelAttribute로 처리가 안될까
         docDAO.update(doc);
         return "redirect:/show";
     }

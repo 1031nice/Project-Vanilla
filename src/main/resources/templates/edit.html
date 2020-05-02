@@ -6,7 +6,7 @@
 </head>
 <body>
 <form th:action="@{/edit}" method="post">
-	<input th:type="hidden" name="docId" th:value="${doc.id}"/>
+	<input th:type="hidden" name="id" th:value="${doc.id}"/>
 	<input th:type="text" name="title" autofocus="autofocus" th:value="${doc.title}"/><br>
 	<textarea name="content" wrap="soft" th:text="${doc.content}"></textarea><br>
 	<input type="submit" value="Submit">

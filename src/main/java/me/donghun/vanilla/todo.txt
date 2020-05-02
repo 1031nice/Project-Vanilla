@@ -1,1 +1,1 @@
-content에 !를 추가하면 sql에러난다
+content에 작은 따옴표가 들어가면 sql 에러 발생

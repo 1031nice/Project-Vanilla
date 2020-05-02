@@ -14,7 +14,7 @@
 	<input type="submit" value="Delete"><br><br>
 </form>
 <form th:action="@{/edit}">
-	<input type="hidden" name="docId" th:value="${doc.id}">
+	<input type="hidden" name="id" th:value="${doc.id}">
 	<input type="hidden" name="title" th:value="${doc.title}">
 	<input type="hidden" name="content" th:value="${doc.content}">
 	<input type="submit" value="Edit">
