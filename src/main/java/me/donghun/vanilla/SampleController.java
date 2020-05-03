@@ -57,7 +57,7 @@ public class SampleController {
         User user = new User(id, pw);
         user = userDAO.login(user);
         if(user != null) {
-            session.setAttribute("user", user);
+            session.setAttribute("user", user); // session id가 url에 보이는데 어떻게 숨기지
             return "redirect:/show";
         }
         else
@@ -107,15 +107,34 @@ public class SampleController {
     }
 
     @PostMapping("/edit")
-    public String edit2(@ModelAttribute Doc doc){
+    public String editSubmit(@ModelAttribute Doc doc){
         /*
-         왜 docId는 ModelAttribute로 처리가 안될까
+         Q. 왜 docId는 ModelAttribute로 처리가 안될까
          A. Doc의 변수 이름은 docId가 아니라 id인데
          view에서 값을 전달할 때 name은 docId여서 인식을 못한거지
          view에서 name을 docId가 아니라 그냥 id로 수정하였음.
          */
-        System.out.println(doc.getId());
         docDAO.update(doc);
+        return "redirect:/show";
+    }
+
+    @GetMapping("/modify")
+    public ModelAndView modifySubmit(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("userModify.html");
+        return modelAndView;
+    }
+
+    @PostMapping("/modify")
+    public String modifySubmit(@ModelAttribute User user, HttpSession session){
+//        System.out.println(user.getId()); // disable 설정되어 있는 값은 전달이 안되나보네?
+//        System.out.println(user.getPw());
+//        System.out.println(user.getName());
+        session.removeAttribute("user");
+        session.setAttribute("user", user);
+        userDAO.modify(user);
         return "redirect:/show";
     }
 }
