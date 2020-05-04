@@ -1,1 +1,2 @@
-content에 작은 따옴표가 들어가면 sql 에러 발생
+create는 괜찮은데
+update할 때 content에 작은 따옴표가 들어가면 sql 에러 발생

@@ -125,11 +125,18 @@ public class DocDAO {
     public void update(Doc doc) {
         try{
             conn = getConnection();
-            String sql = "update document set title='"+doc.getTitle()+"', "
-                    + "content='"+doc.getContent()+"', ts=CURRENT_TIMESTAMP"
-                    + " where doc_id = " + doc.getId();
-            System.out.println(sql);
-            stmt.executeUpdate(sql); //SQL문을 전달하여 실행
+            // 이런식으로 코드짜면 content나 title 같은 string에 ' 들어갔을 때 골치아프다. preparestmt가 좋은듯
+//            String sql = "update document set title='"+doc.getTitle()+"', "
+//                    + "content='"+doc.getContent()+"', ts=CURRENT_TIMESTAMP"
+//                    + " where doc_id = " + doc.getId();
+//            System.out.println(sql);
+            String sql = "UPDATE document SET title = ?, content = ?, ts = CURRENT_TIMESTAMP WHERE doc_id = ?";
+            ps = (PreparedStatement) conn.prepareStatement(sql);
+            ps.setString(1, doc.getTitle());
+            ps.setString(2, doc.getContent());
+            ps.setLong(3, doc.getId());
+            ps.executeUpdate();
+            ps.close();
             stmt.close();
             conn.close();
         } catch(Exception e){
