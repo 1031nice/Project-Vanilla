@@ -2,6 +2,7 @@ package me.donghun.vanilla;
 
 import me.donghun.vanilla.dao.DocDAO;
 import me.donghun.vanilla.dao.UserDAO;
+import me.donghun.vanilla.model.Comment;
 import me.donghun.vanilla.model.Doc;
 import me.donghun.vanilla.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,4 +141,11 @@ public class SampleController {
         userDAO.modify(user);
         return "redirect:/show";
     }
+
+    @PostMapping("/comment")
+    public String processCommentForm(@ModelAttribute Comment comment){
+        System.out.println(comment);
+        return "redirect:/show";
+    }
 }
+
