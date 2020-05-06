@@ -37,7 +37,8 @@ public class DocDAO {
                         rs.getString("title"),
                         rs.getString("content"),
                         rs.getTimestamp("ts", nowGMTplus9),
-                        rs.getInt("hit")));
+                        rs.getInt("hit"),
+                        rs.getString("user_id")));
             }
             rs.close();
             stmt.close();
@@ -71,7 +72,8 @@ public class DocDAO {
                     rs.getString("title"),
                     rs.getString("content"),
                     rs.getTimestamp("ts", nowGMTplus9),
-                    rs.getInt("hit"));
+                    rs.getInt("hit"),
+                    rs.getString("user_id"));
             sql = "UPDATE document set hit = hit + 1 where doc_id = " + docId;
             stmt.executeUpdate(sql);
             rs.close();
@@ -97,11 +99,12 @@ public class DocDAO {
     public void add(Doc doc) {
         try{
             conn = getConnection();
-            String sql = "insert into document (title, content, hit) values (?, ?, ?)";
+            String sql = "insert into document (title, content, hit, user_id) values (?, ?, ?, ?)";
             ps = (PreparedStatement)conn.prepareStatement(sql);
             ps.setString(1, doc.getTitle());
             ps.setString(2, doc.getContent());
             ps.setInt(3, 0);
+            ps.setString(4, doc.getUserId());
             ps.executeUpdate();
             ps.close();
             stmt.close();

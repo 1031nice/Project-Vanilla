@@ -1,1 +1,0 @@
-document에 author 추가할 것

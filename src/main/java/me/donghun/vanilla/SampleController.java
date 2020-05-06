@@ -87,7 +87,8 @@ public class SampleController {
     }
 
     @PostMapping("/write")
-    public String processWriteForm(@ModelAttribute Doc doc) {
+    public String processWriteForm(HttpSession session, @ModelAttribute Doc doc) {
+        doc.setUserId(((User)session.getAttribute("user")).getId());
         docDAO.add(doc);
         return "redirect:/show";
     }

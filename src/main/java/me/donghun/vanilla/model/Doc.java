@@ -8,7 +8,7 @@ public class Doc {
     private Long id;
     private String title;
     private String content;
-    private String author;
+    private String userId;
     private int hit;
     private Timestamp date;
 
@@ -31,11 +31,11 @@ public class Doc {
     public Timestamp getDate() {
         return date;
     }
-    public String getAuthor() {
-        return author;
+    public String getUserId() {
+        return userId;
     }
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
     public void setTitle(String title) {
         this.title = title;
@@ -60,12 +60,13 @@ public class Doc {
     }
 
     // db에서 읽어올 때 쓰는 생성자
-    public Doc(Long id, String title, String content, Timestamp date, int hit) {
+    public Doc(Long id, String title, String content, Timestamp date, int hit, String userId) {
         this.id = id;
         setTitle(title);
         setContent(content);
         this.date = date;
         this.hit = hit;
+        this.userId = userId;
     }
 
 }
