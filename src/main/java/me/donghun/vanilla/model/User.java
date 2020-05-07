@@ -1,6 +1,7 @@
 package me.donghun.vanilla.model;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 
 public class User {
 
@@ -10,6 +11,8 @@ public class User {
     private String pw;
     @NotEmpty
     private String name;
+
+    private ArrayList<Doc> documents;
 
     public User() {
     }
@@ -41,5 +44,10 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-
+    public ArrayList<Doc> getDocuments() {
+        return documents;
+    }
+    public void setDocuments(ArrayList<Doc> documents) {
+        this.documents = documents;
+    }
 }

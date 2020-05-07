@@ -23,6 +23,7 @@
 	<textarea name="content" wrap="soft" autofocus="autofocus"></textarea><br>
 	<input type="submit" value="comment">
 	<input type="hidden" name="documentId" th:value="${doc.id}">
+	<input type="hidden" name="userId" th:value="${session.user.id}">
 </form>
 </body>
 </html>

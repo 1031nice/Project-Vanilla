@@ -1,6 +1,7 @@
 package me.donghun.vanilla.dao;
 
 import me.donghun.vanilla.ConnectionFactory;
+import me.donghun.vanilla.model.Comment;
 import me.donghun.vanilla.model.Doc;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +27,11 @@ public class DocDAO {
         return conn;
     }
 
-    public List<Doc> getAll(List<Doc> docs) {
+    public List<Doc> getAllDoc(List<Doc> docs) {
         try{
             conn = getConnection();
             String sql = "SELECT * FROM document order by ts desc";
-            rs = stmt.executeQuery(sql); //SQL문을 전달하여 실행
+            rs = stmt.executeQuery(sql);
             while(rs.next()) {
                 Calendar nowGMTplus9 = Calendar.getInstance(TimeZone.getTimeZone("GMT+9"));
                 docs.add(new Doc(rs.getLong("doc_id"),
@@ -60,7 +61,7 @@ public class DocDAO {
         return docs;
     }
 
-    public Doc get(int docId) {
+    public Doc getDocByDocId(int docId) {
         Doc ret = null;
         try{
             conn = getConnection();
@@ -96,7 +97,45 @@ public class DocDAO {
         return ret;
     }
 
-    public void add(Doc doc) {
+    // 내가 쓴 글 보기 기능
+/*    public Doc getDocsByUserId(int userId) {
+        Doc ret = null;
+        try{
+            conn = getConnection();
+            String sql = "SELECT * FROM document where doc_id = " + docId;
+            rs = stmt.executeQuery(sql); //SQL문을 전달하여 실행
+            rs.next();
+            Calendar nowGMTplus9 = Calendar.getInstance(TimeZone.getTimeZone("GMT+9"));
+            ret = new Doc(rs.getLong("doc_id"),
+                    rs.getString("title"),
+                    rs.getString("content"),
+                    rs.getTimestamp("ts", nowGMTplus9),
+                    rs.getInt("hit"),
+                    rs.getString("user_id"));
+            sql = "UPDATE document set hit = hit + 1 where doc_id = " + docId;
+            stmt.executeUpdate(sql);
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally { //예외가 있든 없든 무조건 실행
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException ex1){
+            }
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException ex1){
+            }
+        }
+        return ret;
+    }
+ */
+
+    public void addDoc(Doc doc) {
         try{
             conn = getConnection();
             String sql = "insert into document (title, content, hit, user_id) values (?, ?, ?, ?)";
@@ -163,6 +202,34 @@ public class DocDAO {
             conn = getConnection();
             String sql = "delete from document where doc_id = " + docId;
             stmt.executeUpdate(sql);
+            stmt.close();
+            conn.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally { //예외가 있든 없든 무조건 실행
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException ex1){
+            }
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException ex1){
+            }
+        }
+    }
+
+    public void addComment(Comment comment) {
+        try{
+            conn = getConnection();
+            String sql = "insert into comment (content, user_id, doc_id) values (?, ?, ?)";
+            ps = (PreparedStatement)conn.prepareStatement(sql);
+            ps.setString(1, comment.getContent());
+            ps.setString(2, comment.getUserId());
+            ps.setLong(3, comment.getDocumentId());
+            ps.executeUpdate();
+            ps.close();
             stmt.close();
             conn.close();
         } catch(Exception e){

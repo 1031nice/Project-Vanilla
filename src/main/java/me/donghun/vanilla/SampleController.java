@@ -9,12 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.SessionFlashMapManager;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -68,14 +67,14 @@ public class SampleController {
     @GetMapping("/show")
     public String show(Model model){
         List<Doc> docList = new ArrayList<>();
-        docDAO.getAll(docList);
+        docDAO.getAllDoc(docList);
         model.addAttribute(docList);
         return "list.html";
     }
 
     @GetMapping("/read/{docId}")
     public String read(Model model, @PathVariable Integer docId){
-        Doc doc = docDAO.get(docId);
+        Doc doc = docDAO.getDocByDocId(docId);
         model.addAttribute(doc);
         return "detail.html";
     }
@@ -89,7 +88,7 @@ public class SampleController {
     @PostMapping("/write")
     public String processWriteForm(HttpSession session, @ModelAttribute Doc doc) {
         doc.setUserId(((User)session.getAttribute("user")).getId());
-        docDAO.add(doc);
+        docDAO.addDoc(doc);
         return "redirect:/show";
     }
 
@@ -145,6 +144,14 @@ public class SampleController {
 
     @PostMapping("/comment")
     public String processCommentForm(@ModelAttribute Comment comment){
+        /*
+        1. database에 comment 튜플을 추가한다.
+        2. 해당 Document가 comment id를 갖게 한다.
+        Q. 그럼 document 하나가 하나의 comment id만 가질 수 있는건가?
+        연결고리 역할을 하는 테이블이 필요할 거 같은데?
+        야이 바보야 comment 테이블에서 doc Id를 갖고 있으면 되잖아
+         */
+        docDAO.addComment(comment);
         System.out.println(comment);
         return "redirect:/show";
     }

@@ -2,6 +2,7 @@ package me.donghun.vanilla.model;
 
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class Doc {
 
@@ -11,6 +12,8 @@ public class Doc {
     private String userId;
     private int hit;
     private Timestamp date;
+
+    private ArrayList<Comment> comments;
 
     public int getHit() {
         return hit;
@@ -42,6 +45,12 @@ public class Doc {
     }
     public void setContent(String content) {
         this.content = content;
+    }
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
     }
 
     public Doc() {

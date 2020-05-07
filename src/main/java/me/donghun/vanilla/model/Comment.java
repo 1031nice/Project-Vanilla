@@ -7,7 +7,7 @@ public class Comment {
     private Long id;
     private Long documentId;
     private String content;
-    private String author;
+    private String userId;
     private Timestamp date;
 
     public Long getId() {
@@ -29,11 +29,11 @@ public class Comment {
     public void setContent(String content) {
         this.content = content;
     }
-    public String getAuthor() {
-        return author;
+    public String getUserId() {
+        return userId;
     }
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
     public Timestamp getDate() {
         return date;
@@ -48,7 +48,7 @@ public class Comment {
                 "id=" + id +
                 ", documentId=" + documentId +
                 ", content='" + content + '\'' +
-                ", author='" + author + '\'' +
+                ", author='" + userId + '\'' +
                 ", date=" + date +
                 '}';
     }
