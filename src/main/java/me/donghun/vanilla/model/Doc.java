@@ -54,18 +54,15 @@ public class Doc {
     }
 
     public Doc() {
+        this(0L, null, null, null, 0, null);
     }
 
     public Doc(String title, String content) {
-        setTitle(title);
-        setContent(content);
+        this(0L, title, content, null, 0, null);
     }
 
     public Doc(Long id, String title, String content) {
-        this.id = id;
-        setTitle(title);
-        setContent(content);
-        this.hit = 0;
+        this(id, title, content, null, 0, null);
     }
 
     // db에서 읽어올 때 쓰는 생성자
@@ -76,6 +73,7 @@ public class Doc {
         this.date = date;
         this.hit = hit;
         this.userId = userId;
+        this.setComments(new ArrayList<>());
     }
 
 }

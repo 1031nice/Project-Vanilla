@@ -42,6 +42,14 @@ public class Comment {
         this.date = date;
     }
 
+    public Comment(Long id, Long documentId, String content, String userId, Timestamp date) {
+        this.id = id;
+        this.documentId = documentId;
+        this.content = content;
+        this.userId = userId;
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +

@@ -6,6 +6,7 @@ import me.donghun.vanilla.model.Doc;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -27,7 +28,8 @@ public class DocDAO {
         return conn;
     }
 
-    public List<Doc> getAllDoc(List<Doc> docs) {
+    public List<Doc> getAllDoc() {
+        List<Doc> docs = new ArrayList<>();
         try{
             conn = getConnection();
             String sql = "SELECT * FROM document order by ts desc";
@@ -61,7 +63,7 @@ public class DocDAO {
         return docs;
     }
 
-    public Doc getDocByDocId(int docId) {
+    public Doc getDocByDocId(Long docId) {
         Doc ret = null;
         try{
             conn = getConnection();
@@ -246,5 +248,39 @@ public class DocDAO {
             }catch(SQLException ex1){
             }
         }
+    }
+
+    public List<Comment> getCommentsByDocId(Long docId) {
+        List<Comment> ret = new ArrayList<>();
+        try{
+            conn = getConnection();
+            String sql = "SELECT * FROM comment where doc_id = " + docId;
+            rs = stmt.executeQuery(sql); //SQL문을 전달하여 실행
+            while(rs.next()) {
+                Calendar nowGMTplus9 = Calendar.getInstance(TimeZone.getTimeZone("GMT+9"));
+                ret.add(new Comment(rs.getLong("comment_id"),
+                        docId,
+                        rs.getString("content"),
+                        rs.getString("user_id"),
+                        rs.getTimestamp("ts", nowGMTplus9)));
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally { //예외가 있든 없든 무조건 실행
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException ex1){
+            }
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException ex1){
+            }
+        }
+        return ret;
     }
 }

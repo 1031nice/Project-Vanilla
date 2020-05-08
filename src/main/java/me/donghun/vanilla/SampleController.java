@@ -66,15 +66,26 @@ public class SampleController {
 
     @GetMapping("/show")
     public String show(Model model){
-        List<Doc> docList = new ArrayList<>();
-        docDAO.getAllDoc(docList);
+        List<Doc> docList = docDAO.getAllDoc();
+//        for(Doc doc : docList){ 여기서 받을 필요가 있나? 게다가 여기서 받을 경우 read에서 전달해주어야 한다
+//            Comment comment = docDAO.getCommentsByDocId(doc.getId());
+//            if(comment != null) {
+//                doc.getComments().add(comment);
+//                System.out.println("댓글이 있는 doc: " + doc.getTitle());
+//                System.out.println("댓글 내용: " + doc.getComments().get(0).getContent());
+//            }
+//        }
         model.addAttribute(docList);
         return "list.html";
     }
 
     @GetMapping("/read/{docId}")
-    public String read(Model model, @PathVariable Integer docId){
+    public String read(Model model, @PathVariable Long docId){
         Doc doc = docDAO.getDocByDocId(docId);
+        List<Comment> comments = docDAO.getCommentsByDocId(docId);
+        for (Comment comment : comments) {
+            doc.getComments().add(comment);
+        }
         model.addAttribute(doc);
         return "detail.html";
     }
