@@ -166,5 +166,24 @@ public class SampleController {
         System.out.println(comment);
         return "redirect:/show";
     }
+
+    @PostMapping("/search")
+    public ModelAndView initSearchForm(@RequestParam String searchBy, @RequestParam String searchWord){
+        List<Doc> foundDocs = new ArrayList<Doc>();
+        if(searchBy.equals("title")){
+            List<Doc> docs = docDAO.getAllDoc();
+            for(Doc doc : docs){
+                if(doc.getTitle().contains(searchWord))
+                    foundDocs.add(doc);
+            }
+        }
+        else { // author
+            foundDocs = docDAO.getDocsByUserId(searchWord);
+        }
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("foundDocs", foundDocs);
+        mav.setViewName("search.html");
+        return mav;
+    }
 }
 

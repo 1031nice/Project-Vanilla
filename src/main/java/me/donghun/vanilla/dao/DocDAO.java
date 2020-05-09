@@ -100,22 +100,21 @@ public class DocDAO {
     }
 
     // 내가 쓴 글 보기 기능
-/*    public Doc getDocsByUserId(int userId) {
-        Doc ret = null;
+    public List<Doc> getDocsByUserId(String userId) {
+        List<Doc> ret = new ArrayList<>();
         try{
             conn = getConnection();
-            String sql = "SELECT * FROM document where doc_id = " + docId;
+            String sql = "SELECT * FROM document where user_id = '" + userId + "'"; // 아 sql은 이게 무넺네 String 들어가면 작은따옴표
             rs = stmt.executeQuery(sql); //SQL문을 전달하여 실행
-            rs.next();
-            Calendar nowGMTplus9 = Calendar.getInstance(TimeZone.getTimeZone("GMT+9"));
-            ret = new Doc(rs.getLong("doc_id"),
-                    rs.getString("title"),
-                    rs.getString("content"),
-                    rs.getTimestamp("ts", nowGMTplus9),
-                    rs.getInt("hit"),
-                    rs.getString("user_id"));
-            sql = "UPDATE document set hit = hit + 1 where doc_id = " + docId;
-            stmt.executeUpdate(sql);
+            while(rs.next()) {
+                Calendar nowGMTplus9 = Calendar.getInstance(TimeZone.getTimeZone("GMT+9"));
+                ret.add(new Doc(rs.getLong("doc_id"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getTimestamp("ts", nowGMTplus9),
+                        rs.getInt("hit"),
+                        rs.getString("user_id")));
+            }
             rs.close();
             stmt.close();
             conn.close();
@@ -135,7 +134,6 @@ public class DocDAO {
         }
         return ret;
     }
- */
 
     public void addDoc(Doc doc) {
         try{

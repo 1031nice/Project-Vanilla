@@ -9,8 +9,15 @@
 @{를 했을 때는 session이 자동으로 href에 붙어갔는데
 @{~로 고치고 나니 href에서 session 정보가 빠지고 (url에서 안보이고) session 정보도 잘 전달
 -->
-<div th:text="${session.user.name}"></div>
-<a href="/write">Write</a>     <a href="/logout">logout</a>     <a href="/modify">Modify</a><br>
+Welcome, <span th:text="${session.user.name}"></span><br>
+<a href="/logout">logout</a>     <a href="/modify">Modify</a>     <a href="/write">Write</a><br><br>
+<form th:action="@{/search}" method="post">
+    <select id="searchBy" name="searchBy">
+        <option value="title">title</option>
+        <option value="author">author</option>
+    </select>
+    <input th:type="searchWord" name="searchWord" autofocus="autofocus"/><input type="submit" value="Search">
+</form>
 <li th:each="doc: ${docList}">
     <a th:href="@{~/read/{docId}(docId=${doc.id})}"><td th:text="${doc.title}"></td></a><br>
 </li>
