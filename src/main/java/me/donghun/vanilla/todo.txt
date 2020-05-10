@@ -1,9 +1,2 @@
-@ comment submit하면 db comment 테이블에 추가되는 것까지 구현
-이제 document를 읽어올 때 comment까지 읽어올 수 있게 해야한다.
-
-one user to many documents
-one document to many comments
-
-@ 내가 쓴 글 보기 기능 추가
-@ 내가 쓴 댓글도 가능하겠군
-@ 글 검색도 되면 좋겠지
+개선사항
+comment 삭제시 redirect로 처리해서 글 조회수가 올라간다

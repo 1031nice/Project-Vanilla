@@ -163,8 +163,15 @@ public class SampleController {
         야이 바보야 comment 테이블에서 doc Id를 갖고 있으면 되잖아
          */
         docDAO.addComment(comment);
-        System.out.println(comment);
-        return "redirect:/show";
+        return "redirect:/read/" + comment.getDocumentId();
+    }
+
+    @PostMapping("/delete/comment")
+    public String deleteComment(@ModelAttribute Comment comment){
+        System.out.println(comment.getDocumentId());
+        System.out.println(comment.getId());
+        docDAO.deleteComment(comment.getId());
+        return "redirect:/read/" + comment.getDocumentId();
     }
 
     @PostMapping("/search")

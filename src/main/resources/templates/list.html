@@ -19,7 +19,7 @@ Welcome, <span th:text="${session.user.name}"></span><br>
     <input th:type="searchWord" name="searchWord" autofocus="autofocus"/><input type="submit" value="Search">
 </form>
 <li th:each="doc: ${docList}">
-    <a th:href="@{~/read/{docId}(docId=${doc.id})}"><td th:text="${doc.title}"></td></a><br>
+    <a th:href="@{~/read/{docId}(docId=${doc.id})}"><td th:text="${doc.title}"></td>  (<td th:text="${doc.userId}"></td>)</a><br>
 </li>
 
 </body>

@@ -281,4 +281,27 @@ public class DocDAO {
         }
         return ret;
     }
+
+    public void deleteComment(Long commentId) {
+        try{
+            conn = getConnection();
+            String sql = "delete from comment where comment_id = " + commentId;
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally { //예외가 있든 없든 무조건 실행
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException ex1){
+            }
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException ex1){
+            }
+        }
+    }
 }

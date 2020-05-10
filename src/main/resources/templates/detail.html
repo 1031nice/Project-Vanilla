@@ -20,7 +20,13 @@
 내용: <span th:text="${doc.content}"/><br><br>
 
 <li th:each="comment: ${doc.comments}">
-	<td th:text="${comment.content}"></td>(작성자: <td th:text="${comment.userId}"></td>  작성일: <td th:text="${comment.date}"></td>)<br>
+	<td th:text="${comment.content}"></td>(작성자: <td th:text="${comment.userId}"></td>  작성일: <td th:text="${comment.date}"></td>)
+	<form th:action="@{/delete/comment}" method="post">
+		<input type="submit" value="delete">
+		<input type="hidden" name="documentId" th:value="${doc.id}">
+		<input type="hidden" name="id" th:value="${comment.id}">
+	</form>
+	<br>
 </li>
 
 <form th:action="@{/comment}" method="post">
