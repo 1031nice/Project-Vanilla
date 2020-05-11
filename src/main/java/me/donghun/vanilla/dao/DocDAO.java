@@ -225,7 +225,7 @@ public class DocDAO {
             conn = getConnection();
             String sql = "insert into comment (content, user_id, doc_id) values (?, ?, ?)";
             ps = (PreparedStatement)conn.prepareStatement(sql);
-            ps.setString(1, comment.getContent());
+            ps.setString(1, comment.getComment());
             ps.setString(2, comment.getUserId());
             ps.setLong(3, comment.getDocumentId());
             ps.executeUpdate();

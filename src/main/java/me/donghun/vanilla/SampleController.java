@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -80,13 +81,15 @@ public class SampleController {
     }
 
     @GetMapping("/read/{docId}")
-    public String read(Model model, @PathVariable Long docId){
-        Doc doc = docDAO.getDocByDocId(docId);
+    public String read(Model model, @PathVariable Long docId, @ModelAttribute("Redirect") String redirect, @ModelAttribute("Doc") Doc doc){
+        if(!redirect.equals("Redirect")){
+            doc = docDAO.getDocByDocId(docId);
+        }
         List<Comment> comments = docDAO.getCommentsByDocId(docId);
         for (Comment comment : comments) {
             doc.getComments().add(comment);
         }
-        model.addAttribute(doc);
+        model.addAttribute("doc", doc); // 그냥 객체를 줄 수도, 이름 붙여서 줄 수도 있다
         return "detail.html";
     }
 
@@ -154,7 +157,7 @@ public class SampleController {
     }
 
     @PostMapping("/comment")
-    public String processCommentForm(@ModelAttribute Comment comment){
+    public String processCommentForm(@ModelAttribute Comment comment, @ModelAttribute Doc doc, RedirectAttributes attributes){
         /*
         1. database에 comment 튜플을 추가한다.
         2. 해당 Document가 comment id를 갖게 한다.
@@ -162,16 +165,19 @@ public class SampleController {
         연결고리 역할을 하는 테이블이 필요할 거 같은데?
         야이 바보야 comment 테이블에서 doc Id를 갖고 있으면 되잖아
          */
+        System.out.println(doc);
+        attributes.addFlashAttribute("Redirect", new String("Redirect"));
+        attributes.addFlashAttribute("Doc", doc);
         docDAO.addComment(comment);
         return "redirect:/read/" + comment.getDocumentId();
     }
 
     @PostMapping("/delete/comment")
-    public String deleteComment(@ModelAttribute Comment comment){
-        System.out.println(comment.getDocumentId());
-        System.out.println(comment.getId());
-        docDAO.deleteComment(comment.getId());
-        return "redirect:/read/" + comment.getDocumentId();
+    public String deleteComment(@ModelAttribute Doc doc, @RequestParam String commentId, RedirectAttributes attributes){
+        attributes.addFlashAttribute("Redirect", new String("Redirect"));
+        attributes.addFlashAttribute("Doc", doc);
+        docDAO.deleteComment(Long.parseLong(commentId));
+        return "redirect:/read/" + doc.getId();
     }
 
     @PostMapping("/search")

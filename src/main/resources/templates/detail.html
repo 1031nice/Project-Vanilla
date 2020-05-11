@@ -20,20 +20,34 @@
 내용: <span th:text="${doc.content}"/><br><br>
 
 <li th:each="comment: ${doc.comments}">
-	<td th:text="${comment.content}"></td>(작성자: <td th:text="${comment.userId}"></td>  작성일: <td th:text="${comment.date}"></td>)
+	<td th:text="${comment.comment}"></td>(작성자: <td th:text="${comment.userId}"></td>  작성일: <td th:text="${comment.date}"></td>)
 	<form th:action="@{/delete/comment}" method="post">
 		<input type="submit" value="delete">
 		<input type="hidden" name="documentId" th:value="${doc.id}">
-		<input type="hidden" name="id" th:value="${comment.id}">
+		<input type="hidden" name="commentId" th:value="${comment.id}">
+		<!--	for document     -->
+		<input type="hidden" name="id" th:value="${doc.id}">
+		<input type="hidden" name="title" th:value="${doc.title}">
+		<!--	<input type="hidden" name="userId" th:value="${session.user.id}">-->
+		<input type="hidden" name="content" th:value="${doc.content}">
+		<input type="hidden" name="hit" th:value="${doc.hit}">
+		<input type="hidden" name="date" th:value="${doc.date}">
 	</form>
 	<br>
 </li>
 
 <form th:action="@{/comment}" method="post">
-	<textarea name="content" wrap="soft" autofocus="autofocus"></textarea><br>
+	<textarea name="comment" wrap="soft" autofocus="autofocus"></textarea><br>
 	<input type="submit" value="add comment">
 	<input type="hidden" name="documentId" th:value="${doc.id}">
 	<input type="hidden" name="userId" th:value="${session.user.id}">
+<!--	for document     -->
+	<input type="hidden" name="id" th:value="${doc.id}">
+	<input type="hidden" name="title" th:value="${doc.title}">
+<!--	<input type="hidden" name="userId" th:value="${session.user.id}">-->
+	<input type="hidden" name="content" th:value="${doc.content}">
+	<input type="hidden" name="hit" th:value="${doc.hit}">
+	<input type="hidden" name="date" th:value="${doc.date}">
 </form>
 </body>
 </html>

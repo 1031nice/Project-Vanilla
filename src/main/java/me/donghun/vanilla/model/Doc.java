@@ -76,4 +76,16 @@ public class Doc {
         this.setComments(new ArrayList<>());
     }
 
+    @Override
+    public String toString() {
+        return "Doc{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", userId='" + userId + '\'' +
+                ", hit=" + hit +
+                ", date=" + date +
+                ", comments=" + comments +
+                '}';
+    }
 }

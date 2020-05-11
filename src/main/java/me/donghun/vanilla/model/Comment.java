@@ -6,7 +6,7 @@ public class Comment {
 
     private Long id;
     private Long documentId;
-    private String content;
+    private String comment;
     private String userId;
     private Timestamp date;
 
@@ -23,11 +23,11 @@ public class Comment {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getContent() {
-        return content;
+    public String getComment() {
+        return comment;
     }
-    public void setContent(String content) {
-        this.content = content;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
     public String getUserId() {
         return userId;
@@ -42,10 +42,10 @@ public class Comment {
         this.date = date;
     }
 
-    public Comment(Long id, Long documentId, String content, String userId, Timestamp date) {
+    public Comment(Long id, Long documentId, String comment, String userId, Timestamp date) {
         this.id = id;
         this.documentId = documentId;
-        this.content = content;
+        this.comment = comment;
         this.userId = userId;
         this.date = date;
     }
@@ -55,7 +55,7 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", documentId=" + documentId +
-                ", content='" + content + '\'' +
+                ", content='" + comment + '\'' +
                 ", author='" + userId + '\'' +
                 ", date=" + date +
                 '}';
