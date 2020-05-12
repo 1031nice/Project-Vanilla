@@ -99,6 +99,43 @@ public class DocDAO {
         return ret;
     }
 
+    public Doc getDocByTitle(String title) {
+        Doc ret = null;
+        try{
+            conn = getConnection();
+            String sql = "SELECT * FROM document where title = '" + title + "'";
+            rs = stmt.executeQuery(sql); //SQL문을 전달하여 실행
+            if(rs.next()) {
+                Calendar nowGMTplus9 = Calendar.getInstance(TimeZone.getTimeZone("GMT+9"));
+                ret = new Doc(rs.getLong("doc_id"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getTimestamp("ts", nowGMTplus9),
+                        rs.getInt("hit"),
+                        rs.getString("user_id"));
+                sql = "UPDATE document set hit = hit + 1 where doc_id = " + ret.getId();
+                stmt.executeUpdate(sql);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally { //예외가 있든 없든 무조건 실행
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException ex1){
+            }
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException ex1){
+            }
+        }
+        return ret;
+    }
+
     // 내가 쓴 글 보기 기능
     public List<Doc> getDocsByUserId(String userId) {
         List<Doc> ret = new ArrayList<>();

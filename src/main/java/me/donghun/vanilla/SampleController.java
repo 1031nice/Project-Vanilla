@@ -101,8 +101,10 @@ public class SampleController {
 
     @PostMapping("/write")
     public String processWriteForm(HttpSession session, @ModelAttribute Doc doc) {
-        doc.setUserId(((User)session.getAttribute("user")).getId());
-        docDAO.addDoc(doc);
+        if(docDAO.getDocByTitle(doc.getTitle()) == null) {
+            doc.setUserId(((User) session.getAttribute("user")).getId());
+            docDAO.addDoc(doc);
+        }
         return "redirect:/show";
     }
 
@@ -183,7 +185,7 @@ public class SampleController {
     @PostMapping("/search")
     public ModelAndView initSearchForm(@RequestParam String searchBy, @RequestParam String searchWord){
         List<Doc> foundDocs = new ArrayList<Doc>();
-        if(searchBy.equals("title")){
+        if(searchBy.equals("title")){ // 이것도 개선 가능. 글이 엄청 많으면 그걸 다들고 올거 아니잖아. db에서 id에 맞는 글만 추려내는일 해줘야지
             List<Doc> docs = docDAO.getAllDoc();
             for(Doc doc : docs){
                 if(doc.getTitle().contains(searchWord))
