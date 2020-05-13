@@ -5,11 +5,11 @@
 <title th:text="${doc.title}"/>
 </head>
 <body>
-<a th:href="@{/show}">list</a>
-<form th:action="@{/delete/{docId}(docId=${doc.id})}">
+<a th:href="@{/board}">list</a>
+<form th:action="@{/board/doc/delete/{docId}(docId = ${doc.id})}" method="post">
 	<input type="submit" value="Delete">
 </form>
-<form th:action="@{/edit}">
+<form th:action="@{/board/doc/edit}">
 	<input type="hidden" name="id" th:value="${doc.id}">
 	<input type="hidden" name="title" th:value="${doc.title}">
 	<input type="hidden" name="content" th:value="${doc.content}">
@@ -21,7 +21,7 @@
 
 <li th:each="comment: ${doc.comments}">
 	<td th:text="${comment.comment}"></td>(작성자: <td th:text="${comment.userId}"></td>  작성일: <td th:text="${comment.date}"></td>)
-	<form th:action="@{/delete/comment}" method="post">
+	<form th:action="@{/board/doc/comment/delete}" method="post">
 		<input type="submit" value="delete">
 		<input type="hidden" name="documentId" th:value="${doc.id}">
 		<input type="hidden" name="commentId" th:value="${comment.id}">
@@ -36,7 +36,7 @@
 	<br>
 </li>
 
-<form th:action="@{/comment}" method="post">
+<form th:action="@{/board/doc/comment/write}" method="post">
 	<textarea name="comment" wrap="soft" autofocus="autofocus"></textarea><br>
 	<input type="submit" value="add comment">
 	<input type="hidden" name="documentId" th:value="${doc.id}">
@@ -47,7 +47,7 @@
 <!--	<input type="hidden" name="userId" th:value="${session.user.id}">-->
 	<input type="hidden" name="content" th:value="${doc.content}">
 	<input type="hidden" name="hit" th:value="${doc.hit}">
-	<input type="hidden" name="date" th:value="${doc.date}">
+<!--	<input type="hidden" name="date" th:value="${doc.date}">-->
 </form>
 </body>
 </html>

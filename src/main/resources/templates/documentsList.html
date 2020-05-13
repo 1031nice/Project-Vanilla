@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>list</title>
+<title>documents list</title>
 </head>
 <body>
 <!--
@@ -10,8 +10,8 @@
 @{~로 고치고 나니 href에서 session 정보가 빠지고 (url에서 안보이고) session 정보도 잘 전달
 -->
 Welcome, <span th:text="${session.user.name}"></span><br>
-<a href="/logout">logout</a>     <a href="/modify">Modify</a>     <a href="/write">Write</a><br><br>
-<form th:action="@{/search}" method="post">
+<a href="/logout/">logout</a>     <a href="/user/edit">edit</a>     <a href="/board/doc/write">Write</a><br><br>
+<form th:action="@{/board/search}" method="post">
     <select id="searchBy" name="searchBy">
         <option value="title">title</option>
         <option value="author">author</option>
@@ -19,7 +19,7 @@ Welcome, <span th:text="${session.user.name}"></span><br>
     <input th:type="searchWord" name="searchWord" autofocus="autofocus"/><input type="submit" value="Search">
 </form>
 <li th:each="doc: ${docList}">
-    <a th:href="@{~/read/{docId}(docId=${doc.id})}"><td th:text="${doc.title}"></td>  (<td th:text="${doc.userId}"></td>)</a><br>
+    <a th:href="@{~/board/doc/{docId}(docId=${doc.id})}"><td th:text="${doc.title}"></td>  (<td th:text="${doc.userId}"></td>)</a><br>
 </li>
 
 </body>

@@ -3,11 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>find documents</title>
 </head>
 <body>
 <li th:each="doc: ${foundDocs}">
-    <a th:href="@{~/read/{docId}(docId=${doc.id})}"><td th:text="${doc.title}"></td>  <td th:text="(${doc.userId})"></td></a><br>
+    <a th:href="@{~/board/doc/{docId}(docId=${doc.id})}"><td th:text="${doc.title}"></td>  <td th:text="(${doc.userId})"></td></a><br>
 </li>
 </body>
 </html>

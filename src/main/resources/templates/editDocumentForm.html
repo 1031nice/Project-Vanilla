@@ -2,10 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>edit</title>
+<title>edit document</title>
 </head>
 <body>
-<form th:action="@{/edit}" method="post">
+<form th:action="@{/board/doc/edit/{docId}(docId = ${doc.id})}" method="post">
 	<input th:type="hidden" name="id" th:value="${doc.id}"/>
 	<input th:type="text" name="title" autofocus="autofocus" th:value="${doc.title}"/><br>
 	<textarea name="content" wrap="soft" th:text="${doc.content}"></textarea><br>

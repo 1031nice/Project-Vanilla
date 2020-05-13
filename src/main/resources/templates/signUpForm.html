@@ -2,10 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>sign-up</title>
 </head>
 <body>
-<form action="#" th:action="@{/signUp}" th:method="post" th:object="${user}">
+<form action="#" th:action="@{/user/new}" th:method="post" th:object="${user}">
 <!--    <p th:if="${#fields.hasErrors{'name')}" th:errors="*{name}">Incorrect date</p>-->
 <!--    <p th:if="${#fields.hasErrors{'id')}" th:errors="*{id}">Incorrect date</p>-->
 <!--    <p th:if="${#fields.hasErrors{'pw')}" th:errors="*{pw}">Incorrect date</p>-->

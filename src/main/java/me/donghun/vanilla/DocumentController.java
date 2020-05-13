@@ -1,19 +1,15 @@
 package me.donghun.vanilla;
 
 import me.donghun.vanilla.dao.DocDAO;
-import me.donghun.vanilla.dao.UserDAO;
 import me.donghun.vanilla.model.Comment;
 import me.donghun.vanilla.model.Doc;
 import me.donghun.vanilla.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -21,51 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class SampleController {
-
-    private static final String VIEWS_USER_CREATE_FORM = "signUp.html";
-
-    @Autowired
-    private UserDAO userDAO;
+public class DocumentController {
 
     @Autowired
     private DocDAO docDAO;
 
-    @GetMapping("/signUp")
-    public String initSignUpForm(Model model){
-        model.addAttribute("user", new User());
-        return VIEWS_USER_CREATE_FORM;
-    }
-
-    @PostMapping("/signUp")
-    public String processSignUpForm(@Valid User user, BindingResult result, RedirectAttributes redirectAttributes){
-        if(result.hasErrors()) // 적절한 에러메시지 출력되는 원리는?
-            return VIEWS_USER_CREATE_FORM;
-        else {
-            userDAO.signUp(user);
-            return "redirect:/";
-        }
-    }
-
-    @GetMapping({"/logout", "/"})
-    public String logout(SessionStatus sessionStatus){
-        sessionStatus.setComplete(); // session 비우기
-        return "Login.html";
-    }
-
-    @PostMapping(value = "/login", produces = "text/html;")
-    public String login(HttpSession session, @RequestParam String id, @RequestParam String pw){
-        User user = new User(id, pw);
-        user = userDAO.login(user);
-        if(user != null) {
-            session.setAttribute("user", user);
-            return "redirect:/show";
-        }
-        else
-            return "Login.html";
-    }
-
-    @GetMapping("/show")
+    @GetMapping("/board")
     public String show(Model model){
         List<Doc> docList = docDAO.getAllDoc();
 //        for(Doc doc : docList){ 여기서 받을 필요가 있나? 게다가 여기서 받을 경우 read에서 전달해주어야 한다
@@ -77,10 +34,10 @@ public class SampleController {
 //            }
 //        }
         model.addAttribute(docList);
-        return "list.html";
+        return "documentsList";
     }
 
-    @GetMapping("/read/{docId}")
+    @GetMapping("/board/doc/{docId}")
     public String read(Model model, @PathVariable Long docId, @ModelAttribute("Redirect") String redirect, @ModelAttribute("Doc") Doc doc){
         if(!redirect.equals("Redirect")){
             doc = docDAO.getDocByDocId(docId);
@@ -90,40 +47,40 @@ public class SampleController {
             doc.getComments().add(comment);
         }
         model.addAttribute("doc", doc); // 그냥 객체를 줄 수도, 이름 붙여서 줄 수도 있다
-        return "detail.html";
+        return "documentDetails";
     }
 
-    @GetMapping("/write")
+    @GetMapping("/board/doc/write")
     public String initWriteForm(Model model) {
         model.addAttribute("doc", new Doc());
-        return "Write.html";
+        return "writeDocumentForm";
     }
 
-    @PostMapping("/write")
+    @PostMapping("/board/doc/write")
     public String processWriteForm(HttpSession session, @ModelAttribute Doc doc) {
         if(docDAO.getDocByTitle(doc.getTitle()) == null) {
             doc.setUserId(((User) session.getAttribute("user")).getId());
             docDAO.addDoc(doc);
         }
-        return "redirect:/show";
+        return "redirect:/board";
     }
 
-    @GetMapping("/delete/{docId}")
+    @PostMapping("/board/doc/delete/{docId}")
     public String delete(@PathVariable Integer docId){
         docDAO.delete(docId);
-        return "redirect:/show";
+        return "redirect:/board";
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/board/doc/edit")
     // 올때는 다 string인가보다. doc id가 long타입이라고 해도 html에서 벨류로 전달할 때는
     public ModelAndView edit(@ModelAttribute Doc doc){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("doc", doc);
-        modelAndView.setViewName("edit.html");
+        modelAndView.setViewName("editDocumentForm.html");
         return modelAndView;
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/board/doc/edit")
     public String editSubmit(@ModelAttribute Doc doc){
         /*
          Q. 왜 docId는 ModelAttribute로 처리가 안될까
@@ -135,54 +92,10 @@ public class SampleController {
         doc.setContent(doc.getContent().replaceAll("'", "\\'"));
         System.out.println(doc.getContent());
         docDAO.update(doc);
-        return "redirect:/show";
+        return "redirect:/board";
     }
 
-    @GetMapping("/modify")
-    public ModelAndView initModifyForm(HttpSession session){
-        User user = (User) session.getAttribute("user");
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("user", user);
-        modelAndView.setViewName("userModify.html");
-        return modelAndView;
-    }
-
-    @PostMapping("/modify")
-    public String processModifyForm(@ModelAttribute User user, HttpSession session){
-//        System.out.println(user.getId()); // disable 설정되어 있는 값은 전달이 안되나보네?
-//        System.out.println(user.getPw());
-//        System.out.println(user.getName());
-        session.removeAttribute("user");
-        session.setAttribute("user", user);
-        userDAO.modify(user);
-        return "redirect:/show";
-    }
-
-    @PostMapping("/comment")
-    public String processCommentForm(@ModelAttribute Comment comment, @ModelAttribute Doc doc, RedirectAttributes attributes){
-        /*
-        1. database에 comment 튜플을 추가한다.
-        2. 해당 Document가 comment id를 갖게 한다.
-        Q. 그럼 document 하나가 하나의 comment id만 가질 수 있는건가?
-        연결고리 역할을 하는 테이블이 필요할 거 같은데?
-        야이 바보야 comment 테이블에서 doc Id를 갖고 있으면 되잖아
-         */
-        System.out.println(doc);
-        attributes.addFlashAttribute("Redirect", new String("Redirect"));
-        attributes.addFlashAttribute("Doc", doc);
-        docDAO.addComment(comment);
-        return "redirect:/read/" + comment.getDocumentId();
-    }
-
-    @PostMapping("/delete/comment")
-    public String deleteComment(@ModelAttribute Doc doc, @RequestParam String commentId, RedirectAttributes attributes){
-        attributes.addFlashAttribute("Redirect", new String("Redirect"));
-        attributes.addFlashAttribute("Doc", doc);
-        docDAO.deleteComment(Long.parseLong(commentId));
-        return "redirect:/read/" + doc.getId();
-    }
-
-    @PostMapping("/search")
+    @PostMapping("/board/search")
     public ModelAndView initSearchForm(@RequestParam String searchBy, @RequestParam String searchWord){
         List<Doc> foundDocs = new ArrayList<Doc>();
         if(searchBy.equals("title")){ // 이것도 개선 가능. 글이 엄청 많으면 그걸 다들고 올거 아니잖아. db에서 id에 맞는 글만 추려내는일 해줘야지
@@ -197,8 +110,38 @@ public class SampleController {
         }
         ModelAndView mav = new ModelAndView();
         mav.addObject("foundDocs", foundDocs);
-        mav.setViewName("search.html");
+        mav.setViewName("findDocuments.html");
         return mav;
     }
+
+
+
+    /*
+    Comment
+     */
+    @PostMapping("/board/doc/comment/write")
+    public String processCommentForm(@ModelAttribute Comment comment, @ModelAttribute Doc doc, RedirectAttributes attributes){
+        /*
+        1. database에 comment 튜플을 추가한다.
+        2. 해당 Document가 comment id를 갖게 한다.
+        Q. 그럼 document 하나가 하나의 comment id만 가질 수 있는건가?
+        연결고리 역할을 하는 테이블이 필요할 거 같은데?
+        야이 바보야 comment 테이블에서 doc Id를 갖고 있으면 되잖아
+         */
+        System.out.println(doc);
+        attributes.addFlashAttribute("Redirect", new String("Redirect"));
+        attributes.addFlashAttribute("Doc", doc);
+        docDAO.addComment(comment);
+        return "redirect:/board/doc/" + comment.getDocumentId();
+    }
+
+    @PostMapping("/board/doc/comment/delete")
+    public String deleteComment(@ModelAttribute Doc doc, @RequestParam String commentId, RedirectAttributes attributes){
+        attributes.addFlashAttribute("Redirect", new String("Redirect"));
+        attributes.addFlashAttribute("Doc", doc);
+        docDAO.deleteComment(Long.parseLong(commentId));
+        return "redirect:/board/doc/" + doc.getId();
+    }
+
 }
 
